@@ -24,7 +24,7 @@ class CityDict(models.Model):
 
 # 课程机构
 class CourseOrg(models.Model):
-    name = models.CharField(max_length=50, verbose_name=u"机构名称")
+    name = models.CharField(max_length=50, verbose_name="机构名称")
     # 机构描述，后面会替换为富文本展示
     desc = models.TextField(verbose_name=u"机构描述")
     click_nums = models.IntegerField(default=0, verbose_name=u"点击数")
@@ -51,7 +51,7 @@ class CourseOrg(models.Model):
 class Teacher(models.Model):
     # 一个机构会有很多老师，所以我们在讲师表添加外键并把课程机构名称保存下来
     # 可以使我们通过讲师找到对应的机构
-    org = models.ForeignKey(CourseOrg, verbose_name=u"所属机构", on_delete=models.CASCADE)
+    org = models.ForeignKey(CourseOrg, verbose_name="所属机构", on_delete=models.CASCADE)
     name = models.CharField(max_length=50, verbose_name=u"教师名称")
     work_years = models.IntegerField(default=0, verbose_name=u"工作年限")
     work_company = models.CharField(max_length=50, verbose_name=u"就职公司")

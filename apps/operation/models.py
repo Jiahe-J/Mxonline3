@@ -68,7 +68,7 @@ class UserFavorite(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return '用户({0})收藏了{1} '.format(self.user, self.fav_type)
+        return '用户({0})收藏了{1}的{2}'.format(self.user, self.fav_type, self.fav_id)
 
 
 # 用户消息表
