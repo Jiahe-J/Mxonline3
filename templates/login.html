@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -71,7 +70,7 @@
             </div>
             <div class="fl form-box">
                 <h2>帐号登录</h2>
-                <form action="login.html" method="post" autocomplete="off">
+                <form action="/login/" method="post" autocomplete="off">{% csrf_token %}
                     <div class="form-group marb20 ">
                         <label>用&nbsp;户&nbsp;名</label>
                         <input name="username" id="account_l" type="text" placeholder="手机号/邮箱"/>
@@ -80,7 +79,7 @@
                         <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
                         <input name="password" id="password_l" type="password" placeholder="请输入您的密码"/>
                     </div>
-                    <div class="error btns login-form-tips" id="jsLoginTips"></div>
+                    <div class="error btns login-form-tips" id="jsLoginTips">{{ msg }}</div>
                     <div class="auto-box marb38">
 
                         <a class="fr" href="forgetpwd.html">忘记密码？</a>
@@ -90,6 +89,7 @@
                 <p class="form-p">没有玉汝于成网帐号？<a href="register.html">[立即注册]</a></p>
             </div>
         </div>
+    </div>
 </section>
 
 </body>
