@@ -84,12 +84,13 @@ xadmin.site.register(views.BaseAdminView, BaseSetting)
 
 # xadmin 全局配置参数信息设置
 class GlobalSettings(object):
-    site_title = "玉汝于成: 慕课后台管理站"
+    site_title = "玉汝于成: 后台管理站"
     site_footer = "Jihe-J's MOOC"
     # 收起菜单
     menu_style = "accordion"
 
     def get_site_menu(self):
+        print(self.get_model_url(Course, 'changelist'))
         return (
             {'title': '课程管理', 'menus': (
                 {'title': '课程信息', 'url': self.get_model_url(Course, 'changelist')},
