@@ -81,7 +81,7 @@
                                 {{ error }}
                             {% endif %}
                         {% endfor %}
-                        </div>
+                    </div>
                     <div class="auto-box marb38">
                         <div class="form-group marb8 {% if login_form.password.errors %} errorput{% endif %}">
                             <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
@@ -100,7 +100,7 @@
                         </div>
                         <input class="btn btn-green" id="jsLoginBtn" type="submit" value="立即登录 > "/>
                 </form>
-                <p class="form-p">没有玉汝于成网帐号？<a href="register.html">[立即注册]</a></p>
+                <p class="form-p">没有玉汝于成网帐号？<a href="{% url "register" %}">[立即注册]</a></p>
             </div>
         </div>
     </div>

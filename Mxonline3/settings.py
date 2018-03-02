@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'operation',
     'xadmin',
     'crispy_forms',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,12 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 # 此处重载是为了使我们的UserProfile生效
 AUTH_USER_MODEL = "users.UserProfile"
+
+# 发送邮件的setting设置
+
+EMAIL_HOST = "smtp.qq.com"
+# EMAIL_PORT = 25
+EMAIL_HOST_USER = "jjh9401@qq.com"
+EMAIL_HOST_PASSWORD = "maafzbixrrsqbjba"  # QQ邮箱生成的密码
+EMAIL_USE_TLS = True
+EMAIL_FROM = "jjh9401@qq.com"
