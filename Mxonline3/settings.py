@@ -71,6 +71,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #添加图片处理器，为了在课程机构前面加上MEDIA_URL
+                'django.template.context_processors.media'
             ],
         },
     },
@@ -150,3 +152,8 @@ EMAIL_HOST_USER = "jjh9401@qq.com"
 EMAIL_HOST_PASSWORD = "maafzbixrrsqbjba"  # QQ邮箱生成的密码
 EMAIL_USE_TLS = True
 EMAIL_FROM = "jjh9401@qq.com"
+
+# 设置我们上传文件的路径
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

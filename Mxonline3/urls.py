@@ -16,7 +16,9 @@ Including another URLconf
 import xadmin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
+from django.views.static import serve
 
+from .settings import MEDIA_ROOT
 from organization.views import OrgView
 from users.views import LoginView, RegisterView, ActiveUserView, ForgetPwdView, ResetView, ModifyPwdView, LogoutView
 
@@ -36,7 +38,9 @@ urlpatterns = [
     # 修改密码url; 用于passwordreset页面提交表单
     path('modify_pwd/', ModifyPwdView.as_view(), name="modify_pwd"),
     # 课程机构首页url
-    path('org_list', OrgView.as_view(), name='org_list'),
+    path('org_list/', OrgView.as_view(), name='org_list'),
     # 退出功能url
     path('logout/', LogoutView.as_view(), name="logout"),
+    # 处理图片显示的url,使用Django自带serve,传入参数告诉它去哪个路径找，我们有配置好的路径MEDIAROOT
+    re_path(r'^media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT})
 ]
