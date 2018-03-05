@@ -1,13 +1,16 @@
 # encoding: utf-8
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
 
 # 并集运算
 from django.contrib.auth.hashers import make_password
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 
 from django.shortcuts import render
-from django.views.generic.base import View
+# from django.views.generic.base import View
+from django.urls import reverse
+from django.views import View
 
 from users.forms import LoginForm, RegisterForm, ActiveForm, ForgetForm, ModifyPwdForm
 from users.models import UserProfile, EmailVerifyRecord
@@ -60,6 +63,7 @@ class CustomBackend(ModelBackend):
 # 基于类实现需要继承的view
 
 
+# 登录功能的view
 class LoginView(View):
     # 直接调用get方法免去判断
     def get(self, request):
@@ -182,7 +186,7 @@ class ForgetPwdView(View):
             return render(request, "forgetpwd.html", {"forget_form": forget_form, "msg": "请检查邮箱是否正确"})
 
 
-# 重置密码的view
+# 点击重置密码连接的view
 class ResetView(View):
     def get(self, request, active_code):
         # 查询邮箱验证记录是否存在
@@ -193,6 +197,8 @@ class ResetView(View):
             for record in all_record:
                 # 获取到对应的邮箱
                 email = record.email
+                # 删除记录，使连接失效
+                record.delete()
                 # 将email传回来
                 return render(request, "password_reset.html", {"email": email})
         # 自己瞎输的验证码
@@ -224,3 +230,11 @@ class ModifyPwdView(View):
         else:
             email = request.POST.get("email", "")
             return render(request, "password_reset.html", {"email": email, "modiypwd_form": modiypwd_form})
+
+
+class LogoutView(View):
+    def get(self, request):
+        # django自带的logout
+        logout(request)
+        # 重定向到首页,
+        return HttpResponseRedirect(reverse("index"))
