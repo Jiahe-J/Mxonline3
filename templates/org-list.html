@@ -134,9 +134,10 @@
                         <img src="../images/rightform3.png"/>
                         <input type="text" name="course_name" id="companyAddress" placeholder="课程名" maxlength="50"/>
                     </div>
-                    <p class="error company-tips" id="jsCompanyTips"></p>
+                    <div class="error company-tips" id="jsCompanyTips"></div>
                     <input class="btn" type="text" id="jsStayBtn" value="立即咨询 >"/>
                     <input type='hidden' name='csrfmiddlewaretoken' value='5I2SlleZJOMUX9QbwYLUIAOshdrdpRcy'/>
+                    {% csrf_token %}
                 </form>
             </div>
 
@@ -157,4 +158,32 @@
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block custom_js %}
+    <script>
+        $(function () {
+            $('#jsStayBtn').on('click', function () {
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "{% url "org:add_ask" %}",
+                    data: $('#jsStayForm').serialize(),
+                    async: true,
+                    success: function (data) {
+                        if (data.status === 'success') {
+                            console.log(data.status);
+                            $('#jsStayForm')[0].reset();
+                            $('#jsCompanyTips').html("");
+                            alert("提交成功")
+                        } else {
+                            console.log(data.status);
+                            $('#jsCompanyTips').html(data.msg)
+                        }
+                    },
+                });
+            });
+        })
+
+    </script>
 {% endblock %}

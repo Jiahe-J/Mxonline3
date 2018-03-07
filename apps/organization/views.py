@@ -1,9 +1,12 @@
+import json
+from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
 from django.views import View
-from pure_pagination import Paginator, PageNotAnInteger, EmptyPage
+from pure_pagination import Paginator, PageNotAnInteger
 
+from organization.forms import UserAskForm
 from organization.models import CourseOrg, CityDict
 
 
@@ -58,3 +61,38 @@ class OrgView(View):
             "sort": sort,
 
         })
+
+
+# 用户添加我要学习
+# class AddUserAskView(View):
+#     # 处理表单提交当然post
+#     def post(self, request):
+#         userask_form = UserAskForm(request.POST)
+#         # 判断该form是否有效
+#         if userask_form.is_valid():
+#             # 这里是modelform和form的区别
+#             # 它有model的属性
+#             # 当commit为true进行真正保存
+#             userask_form.save(commit=True)
+#             # 这样就不需要把一个一个字段取出来然后存到model的对象中之后save
+#
+#             # 如果保存成功,返回json字符串,后面content type是告诉浏览器的,
+#             return HttpResponse("{'status':'success'}", content_type='application/json')
+#         else:
+#             # 如果保存失败，返回json字符串,并将form的报错信息通过msg传递到前端
+#             return HttpResponse("{'status':'fail', 'msg':{0}}".format(userask_form.errors),
+#                                 content_type='application/json')
+
+class AddUserAskView(View):
+    """
+    用户添加咨询
+    """
+
+    def post(self, request):
+        userask_form = UserAskForm(request.POST)
+        if userask_form.is_valid():
+            user_ask = userask_form.save(commit=True)
+            return HttpResponse('{"status":"success"}', content_type='application/json')
+        else:
+            return HttpResponse(json.dumps({'status': 'fail', 'msg': str(userask_form.errors)}),
+                                content_type='application/json')
