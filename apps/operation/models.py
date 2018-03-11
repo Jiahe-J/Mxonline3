@@ -105,3 +105,5 @@ class UserCourse(models.Model):
 
     def __str__(self):
         return '用户({0})学习了{1} '.format(self.user, self.course)
+
+

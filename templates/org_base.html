@@ -25,9 +25,9 @@
                         <div class="fl"><p>服务电话：<b>23333333</b></p></div>
                         <div class="personal">
                             <dl class="user fr">
-                                <dd>mtianyan<img class="down fr" src="{% static 'images/top_down.png' %}"/></dd>
+                                <dd><img class="down fr" src="{% static 'images/top_down.png' %}"/></dd>
                                 <dt><img width="20" height="20"
-                                         src="{% static 'image/2016/12/default_big_14.png' %}"/></dt>
+                                         src="{% static 'images/top_down.png' %}"/></dt>
                             </dl>
                             <div class="userdetail">
                                 <dl>
@@ -137,32 +137,7 @@
 
 <script type="text/javascript" src="{% static 'js/plugins/jquery.raty.js' %}"></script>
 <script type="text/javascript">
-    //收藏分享
-    //收藏分享
-    function add_fav(current_elem, fav_id, fav_type) {
-        $.ajax({
-            cache: false,
-            type: "POST",
-            url: "{% url "org:add_fav" %}",
-            data: {'fav_id': fav_id, 'fav_type': fav_type},
-            async: true,
-            beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-            },
-            success: function (data) {
-                if (data.status == 'fail') {
-                    if (data.msg == '用户未登录') {
-                        window.location.href = "{% url 'login' %}";
-                    } else {
-                        alert(data.msg)
-                    }
 
-                } else if (data.status == 'success') {
-                    current_elem.text(data.msg)
-                }
-            },
-        });
-    }
 
     $('.collectionbtn').on('click', function () {
         add_fav($(this), {{ course_org.id }}, 2);
