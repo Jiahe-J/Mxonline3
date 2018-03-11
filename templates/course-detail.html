@@ -128,18 +128,19 @@
                     <div class="head">相关课程推荐</div>
                     <div class="group_recommend">
 
-                        <dl>
-                            <dt>
-                                <a target="_blank" href="">
-                                    <img width="240" height="220" class="scrollLoading"
-                                         src="../media/courses/2016/11/540e57300001d6d906000338-240-135_mvvGYHL.jpg"/>
-                                </a>
-                            </dt>
-                            <dd>
-                                <a target="_blank" href=""><h2> django实战项目</h2></a>
-                                <span class="fl">学习时长：<i class="key">0</i></span>
-                            </dd>
-                        </dl>
+                        {% for relate_course in relate_courses %}
+                            <dl>
+                                <dt>
+                                    <a target="_blank" href="">
+                                        <img width="240" height="220" class="scrollLoading" src="{{ MEDIA_URL }}{{ relate_course.image }}"/>
+                                    </a>
+                                </dt>
+                                <dd>
+                                    <a target="_blank" href=""><h2>{{ relate_course.name }}</h2></a>
+                                    <span class="fl">学习时长：<i class="key">{{ relate_course.learn_times }}</i></span>
+                                </dd>
+                            </dl>
+                        {% endfor %}
 
 
                     </div>
@@ -164,7 +165,7 @@
                 success: function (data) {
                     if (data.status === 'fail') {
                         if (data.msg === '用户未登录') {
-                            window.location.href = "/login/";
+                            window.location.href = "{% url 'login' %}?next={{ request.path }}";
                         } else {
                             alert(data.msg)
                         }
@@ -186,7 +187,6 @@
 
 
     </script>
-
 {% endblock %}
 
 
