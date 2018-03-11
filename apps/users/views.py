@@ -59,7 +59,7 @@ class LoginView(View):
                     login(request, user)
                     # 增加重定向回原网页。
                     redirect_url = request.POST.get('next', '')
-                    if redirect_url is not None:
+                    if redirect_url:
                         print("redirect_url: " + redirect_url)
                         return HttpResponseRedirect(redirect_url)
                     # 跳转到首页 user request会被带回到首页
