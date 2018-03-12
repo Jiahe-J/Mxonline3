@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
 from pure_pagination import PageNotAnInteger, Paginator, EmptyPage
@@ -20,9 +21,15 @@ class CourseListView(View):
                 all_course = all_course.order_by("-students")
             elif sort == "hot":
                 all_course = all_course.order_by("-click_nums")
-
         # 热门课程推荐
         hot_courses = Course.objects.all().order_by("-students")[:3]
+        # 搜索功能
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            # 在name字段进行操作,做like语句的操作。i代表不区分大小写
+            # or操作使用Q
+            all_course = all_course.filter(Q(name__icontains=search_keywords) | Q(desc__icontains=search_keywords) | Q(
+                detail__icontains=search_keywords))
         # 对课程进行分页
         # 尝试获取前台get请求传递过来的page参数
         # 如果是不合法的配置参数默认返回第一页
@@ -36,7 +43,8 @@ class CourseListView(View):
         return render(request, "course-list.html", {
             "all_course": courses,
             "sort": sort,
-            "hot_courses": hot_courses
+            "hot_courses": hot_courses,
+            "search_keywords": search_keywords,
         })
 
 
@@ -89,7 +97,7 @@ class CourseInfoView(LoginRequiredMixin, View):
         # 取出所有课程id
         course_ids = [all_user_course.course_id for all_user_course in all_user_courses]
         # 获取学过该课程用户学过的其他课程
-        relate_courses = Course.objects.filter(id__in=course_ids).order_by("-click_nums").exclude(id =course.id)[:5]
+        relate_courses = Course.objects.filter(id__in=course_ids).order_by("-click_nums").exclude(id=course.id)[:5]
         # 是否收藏课程
         return render(request, "course-video.html", {
             "course": course,
@@ -117,7 +125,7 @@ class CommentsView(LoginRequiredMixin, View):
         # 取出所有课程id
         course_ids = [all_user_course.course_id for all_user_course in all_user_courses]
         # 获取学过该课程用户学过的其他课程
-        relate_courses = Course.objects.filter(id__in=course_ids).order_by("-click_nums").exclude(id =course.id)[:5]
+        relate_courses = Course.objects.filter(id__in=course_ids).order_by("-click_nums").exclude(id=course.id)[:5]
         # 是否收藏课程
         return render(request, "course-comment.html", {
             "course": course,

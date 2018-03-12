@@ -31,4 +31,4 @@ class UserAskForm(forms.ModelForm):
         if p.match(mobile):
             return mobile
         else:
-            raise forms.ValidationError(u"手机号码非法", code="mobile_invalid")
+            return "手机号码非法"

@@ -1,4 +1,6 @@
 import json
+
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -19,9 +21,10 @@ class OrgView(View):
         org_nums = all_orgs.count()
         # 取出所有的城市
         all_city = CityDict.objects.all()
-
         # 取出筛选的城市
         city_id = request.GET.get('city', '')
+        # 取出搜索的内容
+        search_keywords = request.GET.get('keywords', '')
         if city_id:
             # 外键city_id在数据库中叫city_id
             # 在机构中进一步筛选
@@ -33,6 +36,12 @@ class OrgView(View):
             all_orgs = all_orgs.filter(category=category)
         # 热门机构,如果不加负号会是有小到大。
         hot_orgs = all_orgs.order_by("-click_nums")[:3]
+
+        if search_keywords:
+            # 在name字段进行操作,做like语句的操作。i代表不区分大小写
+            # or操作使用Q
+            all_orgs = all_orgs.filter(Q(name__icontains=search_keywords) | Q(desc__icontains=search_keywords) | Q(
+                address__icontains=search_keywords))
 
         # 进行排序
         sort = request.GET.get('sort', "")
@@ -60,7 +69,7 @@ class OrgView(View):
             "category": category,
             "hot_orgs": hot_orgs,
             "sort": sort,
-
+            "search_keywords": search_keywords,
         })
 
 
@@ -137,8 +146,7 @@ class AddUserAskView(View):
             user_ask = userask_form.save(commit=True)
             return HttpResponse('{"status":"success"}', content_type='application/json')
         else:
-            return HttpResponse(json.dumps({'status': 'fail', 'msg': str(userask_form.errors)}),
-                                content_type='application/json')
+            return HttpResponse('{"status":"fail", "msg":"您的字段有错误,请检查"}', content_type='application/json')
 
 
 class OrgDescView(View):
@@ -238,6 +246,13 @@ class TeacherListView(View):
                 all_teacher = all_teacher.order_by("-click_nums")
         # 排行榜讲师
         rank_teachers = Teacher.objects.all().order_by("-fav_nums")[:5]
+        # 搜索功能
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            # 在name字段进行操作,做like语句的操作。i代表不区分大小写
+            # or操作使用Q
+            all_teacher = all_teacher.filter(
+                Q(name__icontains=search_keywords) | Q(work_company__icontains=search_keywords))
         # 对讲师进行分页
         # 尝试获取前台get请求传递过来的page参数
         # 如果是不合法的配置参数默认返回第一页
@@ -253,6 +268,7 @@ class TeacherListView(View):
             "teacher_nums": teacher_nums,
             "sort": sort,
             "rank_teachers": rank_teachers,
+            "search_keywords": search_keywords,
         })
 
 

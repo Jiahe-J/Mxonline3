@@ -10,8 +10,10 @@ from django import forms
 # 引入验证码field
 from captcha.fields import CaptchaField
 
-
 # 登录表单验证
+from users.models import UserProfile
+
+
 class LoginForm(forms.Form):
     # 用户名密码不能为空
     username = forms.CharField(required=True)
@@ -47,3 +49,17 @@ class ModifyPwdForm(forms.Form):
     password1 = forms.CharField(required=True, min_length=6)
     # 密码不能小于5位
     password2 = forms.CharField(required=True, min_length=6)
+
+
+# 修改头像form实现
+class UploadImageForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['image']
+
+
+# 用于个人中心修改个人信息
+class UserInfoForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['nick_name', 'gender', 'birthday', 'address', 'mobile']

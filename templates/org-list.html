@@ -131,12 +131,11 @@
                         <input type="text" name="mobile" id="companyMobile" placeholder="联系电话"/>
                     </div>
                     <div>
-                        <img src="{% static 'images/rightform3.png' %}"/>
+                        <img src="{% static 'images/star.png' %}"/>
                         <input type="text" name="course_name" id="companyAddress" placeholder="课程名" maxlength="50"/>
                     </div>
-                    <div class="error company-tips" id="jsCompanyTips"></div>
+                    <div class="error company-tips" hidden id="jsCompanyTips"></div>
                     <input class="btn" type="text" id="jsStayBtn" value="立即咨询 >"/>
-                    <input type='hidden' name='csrfmiddlewaretoken' value='5I2SlleZJOMUX9QbwYLUIAOshdrdpRcy'/>
                     {% csrf_token %}
                 </form>
             </div>
@@ -148,7 +147,7 @@
                     <dl class="des">
                         <dt class="num fl">{{ forloop.counter }}</dt>
                         <dd>
-                            <a href="/company/2/"><h1>{{ org.name }}</h1></a>
+                            <a href="{% url 'org:org_home' org.id %}"><h1>{{ org.name }}</h1></a>
                             <p>{{ org.address }}</p>
                         </dd>
                     </dl>
@@ -176,11 +175,13 @@
                         if (data.status === 'success') {
                             console.log(data.status);
                             $('#jsStayForm')[0].reset();
-                            $('#jsCompanyTips').html("");
+                            $('#jsCompanyTips').html("").hide();
+
                             alert("提交成功")
                         } else {
                             console.log(data.status);
                             $('#jsCompanyTips').html(data.msg)
+                            alert(data.msg)
                         }
                     },
                 });

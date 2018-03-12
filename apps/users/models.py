@@ -44,7 +44,8 @@ class UserProfile(AbstractUser):
 class EmailVerifyRecord(models.Model):
     SEND_CHOICES = (
         ("register", u"注册"),
-        ("forget", u"找回密码")
+        ("forget", u"找回密码"),
+        ("update", "更新邮箱")
     )
     code = models.CharField(max_length=20, verbose_name=u"验证码")
     # 未设置null = true blank = true 默认不可为空

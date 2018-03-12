@@ -37,7 +37,7 @@
                                     </dd>
                                 </dl>
                                 <div class="btn">
-                                    <a class="personcenter fl" href="usercenter-info.html">进入个人中心</a>
+                                    <a class="personcenter fl" href="{% url 'users:user_info' %}">进入个人中心</a>
                                     <a class="fr" href="/logout/">退出</a>
                                 </div>
                             </div>
@@ -47,17 +47,11 @@
                     <div class="wp">
                         <div class="fl"><p>服务电话：<b>23333333</b></p></div>
                         <!--登录后跳转-->
-
-
                         <a style="color:white" class="fr registerbtn" href="{% url "register" %}">注册</a>
                         <a style="color:white" class="fr loginbtn" href="/login/">登录</a>
-
-
-                    </div>
-
-
                     </div>
                 {% endif %}
+            </div>
             <div class="middle">
                 <div class="wp">
                     <a href="index.html"><img class="fl" src="{% static 'images/logo.jpg' %}"/></a>

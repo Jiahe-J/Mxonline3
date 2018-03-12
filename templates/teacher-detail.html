@@ -116,11 +116,11 @@
                             <p>知名{{ teacher.org.category }}，权威教学</p>
                         </div>
                         <div class="pic">
-                            <a href="org-detail-homepage.html">
+                            <a href="{% url 'org:org_home' teacher.org.id %}">
                                 <img width="150" height="80" src="{{ MEDIA_URL }}{{ teacher.org.image }}"/>
                             </a>
                         </div>
-                        <a href="org-detail-homepage.html">
+                        <a href="{% url 'org:org_home' teacher.org.id %}">
                             <h2 class="center">{{ teacher.org.name }}</h2>
                         </a>
                         <p class="center tell">地址：{{ teacher.org.address }}</p>
