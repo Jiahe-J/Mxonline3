@@ -811,7 +811,7 @@ select:focus {
 /*收藏*/
 a.btn-add-collection {
     display: block;
-    background: url(/static/img/course/new_add_collection.png) no-repeat 46px top;
+    background: url('/static/img/course/new_add_collection.png') no-repeat 46px top;
     height: 32px;
     color: #909b9e;
     text-align: center;

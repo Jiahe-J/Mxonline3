@@ -47,8 +47,7 @@
                                         <div class="bottom">
                                             <a href="{% url 'course:course_detail' course.id %}"><span
                                                     class="fl">来自{{ course.course_org.name }}</span></a>
-                                            <span class="star fr
-                                        " data-favid="15">
+                                            <span class="star fr" data-favid="{{ course.id }}">
                          {{ course.fav_nums }}
                                     </span>
                                         </div>

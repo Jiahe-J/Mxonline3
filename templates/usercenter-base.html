@@ -97,16 +97,16 @@
                 {% endifequal %}><a href="{% url 'users:user_info' %}">个人资料</a></li>
                 <li {% ifequal  '/users/mycourse/' request.path %}
                     class="active2"
-                {% endifequal %}><a href="">我的课程</a></li>
+                {% endifequal %}><a href="{% url 'users:mycourse' %}">我的课程</a></li>
                 <li {% ifequal  '/users/myfav/' request.path|slice:'13' %}
                     class="active2"
-                {% endifequal %}><a href="">我的收藏</a></li>
+                {% endifequal %}><a href="{% url 'users:myfav_course' %}">我的收藏</a></li>
                 <li {% ifequal  '/users/my_message/' request.path %}
                     class="active2"
                 {% endifequal %}>
-                    {#                    <a href="{% url 'users:my_message' %}" style="position: relative;">#}
-                    {#                        我的消息#}
-                    {#                    </a>#}
+                    <a href="{% url 'index' %}" style="position: relative;">
+                        我的消息
+                    </a>
                 </li>
             </ul>
         </div>
@@ -342,7 +342,6 @@
     $('.jsDeleteFav_course').on('click', function () {
         var _this = $(this),
             favid = _this.attr('data-favid');
-        alert(favid)
         $.ajax({
             cache: false,
             type: "POST",
@@ -350,7 +349,7 @@
             data: {
                 fav_type: 1,
                 fav_id: favid,
-                csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
+                csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             async: true,
             success: function (data) {
@@ -369,7 +368,7 @@
             data: {
                 fav_type: 3,
                 fav_id: favid,
-                csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
+                csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             async: true,
             success: function (data) {
@@ -389,7 +388,7 @@
             data: {
                 fav_type: 2,
                 fav_id: favid,
-                csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
+                csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             async: true,
             success: function (data) {

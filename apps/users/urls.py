@@ -8,7 +8,8 @@
 from courses.views import CourseListView, CourseDetailView, CourseInfoView, CommentsView, AddCommentsView, VideoPlayView
 from django.urls import path, re_path
 
-from users.views import UserInfoView, UploadImageView, UpdatePwdView, SendEmailCodeView, UpdateEmailView
+from users.views import UserInfoView, UploadImageView, UpdatePwdView, SendEmailCodeView, UpdateEmailView, MyCourseView, MyFavOrgView, \
+    MyFavTeacherView, MyFavCourseView
 
 app_name = "courses"
 urlpatterns = [
@@ -22,4 +23,13 @@ urlpatterns = [
     path('sendemail_code/', SendEmailCodeView.as_view(), name="sendemail_code"),
     # 修改邮箱
     path('update_email/', UpdateEmailView.as_view(), name="update_email"),
+    # 用户中心我的课程
+    path('mycourse/', MyCourseView.as_view(), name="mycourse"),
+    # 我收藏的课程机构
+    path('myfav/org/', MyFavOrgView.as_view(), name="myfav_org"),
+    # 我收藏的授课讲师
+    path('myfav/teacher/', MyFavTeacherView.as_view(), name="myfav_teacher"),
+    # 我收藏的课程
+    path('myfav/course/', MyFavCourseView.as_view(), name="myfav_course"),
+
 ]
