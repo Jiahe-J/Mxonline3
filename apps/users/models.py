@@ -1,6 +1,6 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import datetime
-from django.contrib.auth.models import AbstractUser
 
 
 class UserProfile(AbstractUser):
@@ -22,12 +22,14 @@ class UserProfile(AbstractUser):
     # 地址
     address = models.CharField(max_length=100, verbose_name="地址", default="", null=True)
     # 电话
-    mobile = models.CharField(max_length=11, null=True, blank=True)
+    mobile = models.CharField(max_length=11, null=True, blank=True,verbose_name="电话")
     # 头像 默认使用default.png
     image = models.ImageField(
         upload_to="image/%Y/%m",
         default=u"image/default.png",
-        max_length=100
+        max_length=100,
+        blank=True,
+        verbose_name="头像"
     )
 
     # meta信息，即后台栏目名
@@ -38,6 +40,11 @@ class UserProfile(AbstractUser):
     # 重载str方法，打印实例会打印username，username为继承自AbstractUser
     def __str__(self):
         return self.username
+
+    # 获取用户未读消息的数量
+    def unread_nums(self):
+        from operation.models import UserMessage
+        return UserMessage.objects.filter(has_read=False, user=self.id).count()
 
 
 # 邮箱验证码model
@@ -69,7 +76,7 @@ class Banner(models.Model):
     image = models.ImageField(
         upload_to="banner/%Y/%m",
         verbose_name=u"轮播图",
-        max_length=100)
+        max_length=100, blank=True)
     url = models.URLField(max_length=200, verbose_name=u"访问地址")
     # 默认index很大靠后。想要靠前修改index值。
     index = models.IntegerField(default=100, verbose_name=u"顺序")

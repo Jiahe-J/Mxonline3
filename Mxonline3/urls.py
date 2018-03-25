@@ -15,18 +15,16 @@ Including another URLconf
 """
 import xadmin
 from django.urls import path, include, re_path
-from django.views.generic import TemplateView
 from django.views.static import serve
 
-from .settings import MEDIA_ROOT
-from organization.views import OrgView
-from users.views import LoginView, RegisterView, ActiveUserView, ForgetPwdView, ResetView, ModifyPwdView, LogoutView
+from .settings import MEDIA_ROOT, STATIC_ROOT
+from users.views import *
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     # 验证码url
     path("captcha/", include('captcha.urls')),
-    path('', TemplateView.as_view(template_name='index.html'), name='index'),
+    path('', IndexView.as_view(), name='index'),
     path('login/', LoginView.as_view(), name="login"),
     path('register/', RegisterView.as_view(), name="register"),
     # 激活用户url，通过?p将后面.*代表全部提取的正则，符合的内容传入参数active_code中
@@ -41,10 +39,15 @@ urlpatterns = [
     path("org/", include('organization.urls', namespace='org')),
     # 退出功能url
     path('logout/', LogoutView.as_view(), name="logout"),
-    # 处理图片显示的url,使用Django自带serve,传入参数告诉它去哪个路径找，我们有配置好的路径MEDIAROOT
+    # 处理图片显示的url,使用Django自带serve,传入参数告诉它去哪个路径找，我们有配置好的路径MEDIA_ROOT
     re_path(r'^media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
+    # 处理图片显示的url,使用Django自带serve,传入参数告诉它去哪个路径找，我们有配置好的路径STATIC_ROOT
+    re_path('^static/(?P<path>.*)', serve, {"document_root": STATIC_ROOT}),
     # 课程app的url配置
     path("course/", include('courses.urls', namespace="course")),
     # 用户app的url配置
-    path("users/", include('users.urls', namespace="users"))
+    path("users/", include('users.urls', namespace="users")),
+    path('ueditor/', include('DjangoUeditor.urls')),
 ]
+
+# 全局404页面配置

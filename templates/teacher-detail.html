@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 <!--crumbs start-->
-{% block titile %} 讲师详情 | 玉汝于成网{% endblock %}
+{% block title %} 讲师详情 | 玉汝于成网{% endblock %}
 {% block custom_bread %}
     <section>
         <div class="wp">
@@ -28,10 +28,7 @@
                                     {% if has_fav_teacher %} 已收藏{% else %}收藏{% endif %}
                                 </span>
                                     <span class="fr btn2 shareBtn bdsharebuttonbox"
-                                          data-text="授课教师-李老师-慕学网"
-                                          data-desc="我在#慕课网#发现了"
-                                          data-comment="李老师，工作年限：5年；学历：本科；所在公司：阿里巴巴&nbsp;；经典案例：django入门和深入；flask入门"
-                                          data-url="/diary/hk_detail/10/">
+                                          data-url="share_{{ teacher.id }}">
                                     <span class="fl">分享</span>
                                     <a href="#" class="bds_more" data-cmd="more"></a>
                                 </span>
@@ -55,7 +52,7 @@
                     <div class="left layout">
                         <div class="head">
                             <ul class="tab_header">
-                                <li class="active"><a href="/diary/hk_detail/10/">全部课程</a></li>
+                                <li class="active">全部课程</li>
                             </ul>
                         </div>
                         <div class="list">
@@ -73,7 +70,7 @@
                                         </div>
                                         <div class="bottom">
                                             <span class="fl">{{ course.course_org.name }}</span>
-                                            <span class="star fr  notlogin" data-favid="15">0</span>
+                                            <span class="star fr " data-favid="{{ course.id }}">{{ course.fav_nums }}</span>
                                         </div>
                                     </div>
                                 {% endfor %}
@@ -100,11 +97,6 @@
                                 {% endif %}
                             </ul>
                         </div>
-                        <!--<div class="pageturn">-->
-                        <!--<ul class="pagelist">-->
-                        <!--<li class="active"><a href="?page=1">1</a></li>-->
-                        <!--</ul>-->
-                        <!--</div>-->
                     </div>
                 </div>
             </div>

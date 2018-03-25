@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block titile %}课程讲师 | 玉汝于成网{% endblock %}
+{% block title %}授课讲师 | 玉汝于成网{% endblock %}
 <!--crumbs start-->
 {% load staticfiles %}
 {% block custom_bread %}
@@ -7,7 +7,7 @@
         <div class="wp">
             <ul class="crumbs">
                 <li><a href="{% url 'index' %}">首页</a>></li>
-                <li>课程讲师</li>
+                <li>授课讲师</li>
             </ul>
         </div>
     </section>
@@ -28,19 +28,19 @@
                     {% for teacher in all_teacher.object_list %}
                         <dl class="des">
                             <dt>
-                                <a href="">
+                                <a href="{% url 'org:teacher_detail' teacher.id %}">
                                     <div class="picpic">
                                         <img width="100" height="100" class="scrollLoading" src="{{ MEDIA_URL }}{{ teacher.image }}"/>
                                     </div>
                                 </a>
                                 <div class="btn">
                                     <div class="fr btn2 bdsharebuttonbox"
-                                         data-text="授课教师-奥巴马-慕学在线"
-                                         data-desc="我在#慕课网#发现了教师“奥巴马”，对学习中的小伙伴很有帮助，一起来看看吧。"
+                                         data-text="授课教师-奥巴马-玉汝于成网"
+                                         data-desc="我在#玉汝于成网#发现了教师“奥巴马”，对学习中的小伙伴很有帮助，一起来看看吧。"
                                          data-comment="奥巴马金牌讲师，从业年限：5年"
                                     >
                                         <span class="fl">分享</span>
-                                        <a href="#" class="bds_more" data-cmd="more"></a>
+                                        <a href="" class="bds_more" data-cmd="more"></a>
                                     </div>
                                 </div>
                             </dt>
@@ -89,13 +89,13 @@
                 {% for rank_teacher in rank_teachers %}
                     <dl class="des">
                         <span class="num fl">{{ forloop.counter }}</span>
-                        <a href="/diary/hk_detail/6/">
+                        <a href="{% url 'org:teacher_detail' rank_teacher.id %}">
                             <dt>
                                 <img width="50" height="50" class="scrollLoading" src="{{ MEDIA_URL }}{{ rank_teacher.image }}"/>
                             </dt>
                         </a>
                         <dd>
-                            <a href="/diary/hk_detail/6/">
+                            <a href="{% url 'org:teacher_detail' rank_teacher.id %}">
                                 <h1 title="{{ rank_teacher.name }}">{{ rank_teacher.name }}</h1>
                             </a>
                             <p>资历：<span>{{ rank_teacher.work_years }}年</span></p>
@@ -106,6 +106,38 @@
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block custom_js %}
+    <script>
+
+        window._bd_share_config = {
+            "common": {
+                "bdSnsKey": {},
+                "bdText": "",
+                "bdMini": "1",
+                "bdMiniList": ["mshare", "qzone", "tsina", "weixin", "sqq"],
+                "bdPic": "",
+                "bdStyle": "0",
+                "bdSize": "16"
+            },
+            share: [
+                {% for teacher in all_teacher.object_list %}
+                    {
+                        "tag": "share_{{ teacher.id }}",
+                        "bdSize": 16,
+                        "bdText": "授课教师-{{ teacher.name }}-玉汝于成网",
+                        "bdDesc": "我在#玉汝于成网#发现了老师“{{ teacher.name }}”，对我们学习很有帮助，一起来看看吧",
+                        "bdUrl": 'http://128.0.0.1：8000{% url 'org:teacher_detail' teacher.id %}',
+
+
+                    },{% endfor %}
+            ]
+
+        }
+        //以下为js加载部分
+        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+    </script>
 {% endblock %}
 
 

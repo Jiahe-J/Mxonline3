@@ -87,6 +87,14 @@ class CourseInfoView(LoginRequiredMixin, View):
     def get(self, request, course_id):
         # 此处的id为表默认为我们添加的值。
         course = Course.objects.get(id=int(course_id))
+        # 查询用户是否开始学习了该课，如果还未学习则，加入用户课程表
+        user_courses = UserCourse.objects.filter(user=request.user, course=course)
+        if not user_courses:
+            user_course = UserCourse(user=request.user, course=course)
+            course.students += 1
+            course.save()
+            user_course.save()
+        # 查询课程资源
         all_resources = CourseResource.objects.filter(course=course)
         # 选出学了这门课的学生关系
         user_courses = UserCourse.objects.filter(course=course)
@@ -99,7 +107,7 @@ class CourseInfoView(LoginRequiredMixin, View):
         # 获取学过该课程用户学过的其他课程
         relate_courses = Course.objects.filter(id__in=course_ids).order_by("-click_nums").exclude(id=course.id)[:5]
         # 是否收藏课程
-        return render(request, "course-video.html", {
+        return render(request, "course-info.html", {
             "course": course,
             "all_resources": all_resources,
             "relate_courses": relate_courses,

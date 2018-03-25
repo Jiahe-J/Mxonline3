@@ -3,6 +3,7 @@ from django.db import models
 from datetime import datetime
 
 # 课程信息表
+from DjangoUeditor.models import UEditorField
 from organization.models import CourseOrg, Teacher
 
 
@@ -17,10 +18,11 @@ class Course(models.Model):
     category = models.CharField(max_length=20, default=u"", verbose_name=u"课程类别")
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name=u"讲师", null=True, blank=True)
     tag = models.CharField(max_length=15, verbose_name=u"课程标签", default=u"")
+    is_banner = models.NullBooleanField(default=False, verbose_name=u"是否轮播")
     desc = models.CharField(max_length=300, verbose_name=u"课程描述")
     # TextField允许我们不输入长度。可以输入到无限大。暂时定义为TextFiled，之后更新为富文本
-    detail = models.TextField(verbose_name=u"课程详情")
-    degree = models.CharField(choices=DEGREE_CHOICES, max_length=2)
+    detail = UEditorField(verbose_name=u"课程详情", width=600, height=300, imagePath="courses/ueditor/", filePath="courses/ueditor/", default='')
+    degree = models.CharField(choices=DEGREE_CHOICES, max_length=2, verbose_name='课程难度')
     # 使用分钟做后台记录(存储最小单位)前台转换
     learn_times = models.IntegerField(default=0, verbose_name=u"学习时长(分钟数)")
     # 保存学习人数:点击开始学习才算
@@ -51,6 +53,14 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# 轮播课程
+class BannerCourse(Course):
+    class Meta:
+        verbose_name = u"轮播课程"
+        verbose_name_plural = verbose_name
+        proxy = True
 
 
 # 章节

@@ -80,16 +80,28 @@ class OrgHomeView(View):
     """
 
     def get(self, request, org_id):
+        # 向前端传值，表明现在在home页
+        current_page = "home"
         # 根据id取到课程机构
         course_org = CourseOrg.objects.get(id=int(org_id))
+        course_org.click_nums += 1
+        course_org.save()
+        # 向前端传值说明用户是否收藏
+        has_fav = False
+        # 必须是用户已登录我们才需要判断。
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_id=course_org.id, fav_type=2):
+                has_fav = True
         # 通过课程机构找到课程。内建的变量，找到指向这个字段的外键引用
-        all_courses = course_org.course_set.all()
-        all_teacher = course_org.teacher_set.all()
+        all_courses = course_org.course_set.all()[:4]
+        all_teacher = course_org.teacher_set.all()[:2]
 
         return render(request, 'org-detail-homepage.html', {
             'all_courses': all_courses,
             'all_teacher': all_teacher,
             'course_org': course_org,
+            "current_page": current_page,
+            "has_fav": has_fav
         })
 
 
@@ -156,7 +168,7 @@ class OrgDescView(View):
     """
 
     def get(self, request, org_id):
-        # 向前端传值，表明现在在home页
+        # 向前端传值，表明现在在desc页
         current_page = "desc"
         # 根据id取到课程机构
         course_org = CourseOrg.objects.get(id=int(org_id))

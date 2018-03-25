@@ -45,8 +45,8 @@
                                 </div>
                             </div>
                         </div>
-                        {#                         <a href="{% url 'users:my_message' %}">#}
-                        <div class="msg-num"><span id="MsgNum">{{ request.user.unread_nums }}</span></div>
+                        <a href="{% url 'users:my_message' %}">
+                            <div class="msg-num"><span id="MsgNum">{{ request.user.unread_nums }}</span></div>
                         </a>
                     </div>
                 {% else %}
@@ -104,7 +104,7 @@
                 <li {% ifequal  '/users/my_message/' request.path %}
                     class="active2"
                 {% endifequal %}>
-                    <a href="{% url 'index' %}" style="position: relative;">
+                    <a href="{% url 'users:my_message' %}" style="position: relative;">
                         我的消息
                     </a>
                 </li>

@@ -5,11 +5,10 @@
 @file: urls.py 
 @time: 2018/03/12 
 """
-from courses.views import CourseListView, CourseDetailView, CourseInfoView, CommentsView, AddCommentsView, VideoPlayView
-from django.urls import path, re_path
+from django.urls import path
 
 from users.views import UserInfoView, UploadImageView, UpdatePwdView, SendEmailCodeView, UpdateEmailView, MyCourseView, MyFavOrgView, \
-    MyFavTeacherView, MyFavCourseView
+    MyFavTeacherView, MyFavCourseView, MyMessageView
 
 app_name = "courses"
 urlpatterns = [
@@ -31,5 +30,7 @@ urlpatterns = [
     path('myfav/teacher/', MyFavTeacherView.as_view(), name="myfav_teacher"),
     # 我收藏的课程
     path('myfav/course/', MyFavCourseView.as_view(), name="myfav_course"),
+    # 我的消息
+    path('my_message/', MyMessageView.as_view(), name="my_message"),
 
 ]

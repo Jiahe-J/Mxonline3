@@ -26,9 +26,10 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 SECRET_KEY = 'n52d%*51xbaw1k_85@$91_2z!%(w%-dk@fu@jn&c&=a*np8_++'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG 为FALSE时，Django将不再做静态文件的代理
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'captcha',
     'pure_pagination',
+    'DjangoUeditor',
 ]
 
 MIDDLEWARE = [
@@ -138,9 +140,9 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 
 # 此处重载是为了使我们的UserProfile生效
 AUTH_USER_MODEL = "users.UserProfile"
@@ -158,6 +160,7 @@ EMAIL_FROM = "jjh9401@qq.com"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # # 分页设置
 # PAGINATION_SETTINGS = {
 #     'PAGE_RANGE_DISPLAYED': 10,

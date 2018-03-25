@@ -24,71 +24,77 @@
                     <div class="wp">
                         <div class="fl"><p>服务电话：<b>23333333</b></p></div>
                         <div class="personal">
+
                             <dl class="user fr">
-                                <dd><img class="down fr" src="{% static 'images/top_down.png' %}"/></dd>
-                                <dt><img width="20" height="20"
-                                         src="{% static 'images/top_down.png' %}"/></dt>
+                                <dd>{{ user.username }}<img class="down fr" src="{% static 'images/top_down.png' %}"/></dd>
+                                <dt><img width="20" height="20" src="{{ MEDIA_URL }}{{ user.image }}"/></dt>
                             </dl>
                             <div class="userdetail">
                                 <dl>
-                                    <dt><img width="80" height="80"
-                                             src="{% static 'media/image/2016/12/default_big_14.png' %}"/></dt>
+                                    <dt><img width="80" height="80" src="{{ MEDIA_URL }}{{ user.image }}"/></dt>
                                     <dd>
-                                        <h2>django</h2>
-                                        <p>天涯明月笙</p>
+                                        <h2>{{ user.nick_name }}</h2>
+                                        <p>{{ user.username }}</p>
                                     </dd>
                                 </dl>
                                 <div class="btn">
                                     <a class="personcenter fl" href="{% url 'users:user_info' %}">进入个人中心</a>
-                                    <a class="fr" href="/logout/">退出</a>
+                                    <a class="fr" href="{% url 'logout' %}">退出</a>
                                 </div>
                             </div>
                         </div>
+                        <a href="{% url 'users:my_message' %}">
+                            <div class="msg-num"><span id="MsgNum">{{ request.user.unread_nums }}</span></div>
+                        </a>
                     </div>
                 {% else %}
                     <div class="wp">
                         <div class="fl"><p>服务电话：<b>23333333</b></p></div>
                         <!--登录后跳转-->
+
+
                         <a style="color:white" class="fr registerbtn" href="{% url "register" %}">注册</a>
-                        <a style="color:white" class="fr loginbtn" href="/login/">登录</a>
+                        <a style="color:white" class="fr loginbtn" href="{% url 'login' %}?next={{ request.path }}">登录</a>
+
+
                     </div>
                 {% endif %}
-            </div>
 
 
-            <div class="middle companyheader">
-                <div class="wp">
-                    <img class="fl" style="width: 112px;height: 103px" src="{{ MEDIA_URL }}{{ course_org.image }}"/>
-                    <div class="head fl">
-                        <h1>
-                            {{ course_org.name }}
-                            <img src="{% static 'images/authentication.png' %}"/>
-                            <img src="{% static 'images/gold.png' %}"/>
-                        </h1>
-                        <p class="fl">
-                            <span class="fl" style="margin-top:8px;color:#848484;">推荐指数： </span>
-                            <span class="precision company-credit" data-star-scope="5.0"></span>
-                            <span class="key">5.0</span>
-                        </p>
+                <div class="middle companyheader">
+                    <div class="wp">
+                        <img class="fl" style="width: 112px;height: 103px" src="{{ MEDIA_URL }}{{ course_org.image }}"/>
+                        <div class="head fl">
+                            <h1>
+                                {{ course_org.name }}
+                                <img src="{% static 'images/authentication.png' %}"/>
+                                <img src="{% static 'images/gold.png' %}"/>
+                            </h1>
+                            <p class="fl">
+                                <span class="fl" style="margin-top:8px;color:#848484;">推荐指数： </span>
+                                <span class="precision company-credit" data-star-scope="5.0"></span>
+                                <span class="key">5.0</span>
+                            </p>
+                        </div>
+                        <div class="btn fr collectionbtn  notlogin
+                 " data-favid="22" data-fav-type="1">
+                            {% if has_fav %}
+                                已收藏
+                            {% else %}
+                                收藏
+                            {% endif %}
+                        </div>
+
                     </div>
-                    <div class="btn fr collectionbtn  notlogin" data-favid="{{ course_org.id }}" data-fav-type="1">
-                        {% if has_fav %}
-                            已收藏
-                        {% else %}
-                            收藏
-                        {% endif %}
-                    </div>
-
                 </div>
             </div>
-        </div>
     </header>
 </section>
 <section>
     <div class="wp">
         <ul class="crumbs">
             <li><a href="{% url 'index' %}">首页</a>></li>
-            <li><a href="{% url 'org:org_list' %}">课程机构</a>></li>
+            <li><a href="{% url 'org:org_list' %}">授课机构</a>></li>
             <li>{% block page_path %}机构首页{% endblock %}</li>
         </ul>
     </div>
@@ -163,16 +169,16 @@
 
         $('.jsFavBtn').on('click', function () {
             var type = $(this).attr('data-fav-type');
-            if (type == '1') {
+            if (type === '1') {
                 favPraise($(this), 'fav', 1, '收藏');
 
-            } else if (type == '3') {
+            } else if (type === '3') {
                 favPraise($(this), 'fav', 3);
 
-            } else if (type == '11') {
+            } else if (type === '11') {
                 favPraise($(this), 'pra', 1);
 
-            } else if (type == '4') {
+            } else if (type === '4') {
                 favPraise($(this), 'fav', 4);
 
             }
@@ -181,6 +187,34 @@
 </script>
 
 
+<script type="text/javascript">
+    //收藏分享
+    function add_fav(current_elem, fav_id, fav_type) {
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "{% url "org:add_fav" %}",
+            data: {'fav_id': fav_id, 'fav_type': fav_type},
+            async: true,
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function (data) {
+                if (data.status === 'fail') {
+                    if (data.msg === '用户未登录') {
+                        window.location.href = "{% url 'login' %}?next={{ request.path }}";
+                    } else {
+                        alert(data.msg)
+                    }
+
+                } else if (data.status === 'success') {
+                    current_elem.text(data.msg)
+                }
+            },
+        });
+    }
+
+</script>
 <script type="text/javascript">
     $(function () {
         $('.recordbtn1').click(function () {
@@ -206,6 +240,5 @@
         });
     });
 </script>
-
 </body>
 </html>

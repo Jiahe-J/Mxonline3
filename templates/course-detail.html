@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block titile %}课程列表 - 玉汝于成网{% endblock %}
+{% block title %}课程列表 - 玉汝于成网{% endblock %}
 {% load staticfiles %}
 <body>
 <!--crumbs start-->
@@ -55,7 +55,7 @@
                         <div class="group-share-box">
                             <div class="bdsharebuttonbox"
                                  data-text="django开始了"
-                                 data-desc="我在#慕课网#发现了"
+                                 data-desc="我在#玉汝于成网#发现了"
                                  data-comment=""
                                  data-url="/group/groupdetail/15/">
                                 <span class="fl">分享到：</span>
@@ -114,7 +114,9 @@
                         </ul>
                     </div>
                     <div class="tab_cont tab_cont1">
-                        {{ course.detail }}
+                        {% autoescape off %}
+                            {{ course.detail }}
+                        {% endautoescape %}
                     </div>
                     <div class="tab_cont tab_cont2">
                         <div class="comment">
@@ -131,18 +133,16 @@
                         {% for relate_course in relate_courses %}
                             <dl>
                                 <dt>
-                                    <a target="_blank" href="">
+                                    <a target="_blank" href="{% url 'course:course_detail' relate_course.id %}">
                                         <img width="240" height="220" class="scrollLoading" src="{{ MEDIA_URL }}{{ relate_course.image }}"/>
                                     </a>
                                 </dt>
                                 <dd>
-                                    <a target="_blank" href=""><h2>{{ relate_course.name }}</h2></a>
+                                    <a target="_blank" href="{% url 'course:course_detail' relate_course.id %}"><h2>{{ relate_course.name }}</h2></a>
                                     <span class="fl">学习时长：<i class="key">{{ relate_course.learn_times }}</i></span>
                                 </dd>
                             </dl>
                         {% endfor %}
-
-
                     </div>
                 </div>
             </div>
@@ -159,7 +159,7 @@
                 url: "{% url "org:add_fav" %}",
                 data: {'fav_id': fav_id, 'fav_type': fav_type},
                 async: true,
-                beforeSend: function (xhr, settings) {
+                beforeSend: function (xhr) {
                     xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
                 },
                 success: function (data) {

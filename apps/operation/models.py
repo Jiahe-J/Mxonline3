@@ -47,15 +47,15 @@ class UserFavorite(models.Model):
         (3, u"讲师")
     )
 
-    user = models.ForeignKey(UserProfile, verbose_name=u"用户", on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, verbose_name="用户", on_delete=models.CASCADE)
     # course = models.ForeignKey(Course, verbose_name=u"课程")
     # teacher = models.ForeignKey()
     # org = models.ForeignKey()
     # fav_type =
 
     # 机智版
-    # 直接保存用户的id.
-    fav_id = models.IntegerField(default=0)
+    # 直接保存id.
+    fav_id = models.IntegerField(default=0, verbose_name="收藏的键")
     # 表明收藏的是哪种类型。
     fav_type = models.IntegerField(
         choices=TYPE_CHOICES,
@@ -77,7 +77,7 @@ class UserMessage(models.Model):
     # 所以如果使用外键，每个消息会对应要有用户。很难实现全员消息。
 
     # 机智版 为0发给所有用户，不为0就是发给用户的id
-    user = models.IntegerField(default=0, verbose_name=u"接收用户")
+    user = models.ForeignKey(UserProfile, verbose_name=u"接收用户", on_delete=models.CASCADE, blank=True)
     message = models.CharField(max_length=500, verbose_name=u"消息内容")
 
     # 是否已读: 布尔类型 BooleanField False未读,True表示已读
@@ -105,5 +105,3 @@ class UserCourse(models.Model):
 
     def __str__(self):
         return '用户({0})学习了{1} '.format(self.user, self.course)
-
-

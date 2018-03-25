@@ -11,12 +11,13 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+from pure_pagination import PageNotAnInteger, Paginator
 
 from courses.models import Course
-from operation.models import UserCourse, UserFavorite
+from operation.models import UserCourse, UserFavorite, UserMessage
 from organization.models import CourseOrg, Teacher
 from users.forms import LoginForm, RegisterForm, ActiveForm, ForgetForm, ModifyPwdForm, UploadImageForm, UserInfoForm
-from users.models import UserProfile, EmailVerifyRecord
+from users.models import UserProfile, EmailVerifyRecord, Banner
 from utils.email_send import send_register_email
 
 
@@ -67,8 +68,9 @@ class LoginView(View):
                     redirect_url = request.POST.get('next', '')
                     if redirect_url:
                         return HttpResponseRedirect(redirect_url)
-                    # 跳转到首页 user request会被带回到首页
-                    return render(request, "index.html")
+                    else:
+                        # 跳转到首页 user request会被带回到首页
+                        return HttpResponseRedirect(reverse("index"))
                 # 即用户未激活跳转登录，提示未激活
                 else:
                     return render(request, "login.html", {"msg": "用户名未激活! 请前往邮箱进行激活"})
@@ -134,6 +136,11 @@ class ActiveUserView(View):
                 user = UserProfile.objects.get(email=email)
                 user.is_active = True
                 user.save()
+                # 写入欢迎注册消息
+                user_message = UserMessage()
+                user_message.user = user.id
+                user_message.message = "欢迎注册玉汝于成网站!!"
+                user_message.save()
                 # 激活成功跳转到登录页面
                 return render(request, "login.html", )
         # 自己瞎输的验证码
@@ -405,3 +412,52 @@ class MyFavCourseView(LoginRequiredMixin, View):
         return render(request, "usercenter-fav-course.html", {
             "course_list": course_list,
         })
+
+
+# 我的消息
+class MyMessageView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        all_message = UserMessage.objects.filter(user=request.user.id)
+
+        # 用户进入个人中心消息页面，清空未读消息记录
+        all_unread_messages = UserMessage.objects.filter(user=request.user.id, has_read=False)
+        for unread_message in all_unread_messages:
+            unread_message.has_read = True
+            unread_message.save()
+        # 对课程机构进行分页
+        # 尝试获取前台get请求传递过来的page参数
+        # 如果是不合法的配置参数默认返回第一页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        # 这里指从allorg中取五个出来，每页显示5个
+        p = Paginator(all_message, 4)
+        messages = p.page(page)
+        return render(request, "usercenter-message.html", {
+            "messages": messages,
+        })
+
+
+# 首页view
+class IndexView(View):
+    def get(self, request):
+        # 取出轮播图
+        all_banner = Banner.objects.all().order_by('index')[:5]
+        # 正常位课程
+        courses = Course.objects.filter(is_banner=False)[:6]
+        # 轮播图课程取三个
+        banner_courses = Course.objects.filter(is_banner=True)[:3]
+        # 课程机构
+        course_orgs = CourseOrg.objects.all()[:15]
+        return render(request, 'index.html', {
+            "all_banner": all_banner,
+            "courses": courses,
+            "banner_courses": banner_courses,
+            "course_orgs": course_orgs,
+        })
+
+

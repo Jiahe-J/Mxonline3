@@ -45,9 +45,9 @@ class ForgetForm(forms.Form):
 
 # 重置密码form实现
 class ModifyPwdForm(forms.Form):
-    # 密码不能小于5位
+    # 密码不能小于6位
     password1 = forms.CharField(required=True, min_length=6)
-    # 密码不能小于5位
+    # 密码不能小于6位
     password2 = forms.CharField(required=True, min_length=6)
 
 
